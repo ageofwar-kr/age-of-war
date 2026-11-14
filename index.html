@@ -24,8 +24,8 @@
 <meta name="twitter:image" content="https://iili.io/nyQdQfe.jpg">
 <meta name="description" content="전 세계 2차 대전 대전략 시뮬레이션 — 영토 정복, 외교 조약, 사이버 해킹, 위성 유도 타격">
 <!-- 빌드 버전 태그 — 새 HTML을 올리면 이 값만 바꾸면 된다. 인게임 감지기가 이 문자열을 읽는다. -->
-<meta name="app-version" content="v6.1">
-<script>var CURRENT_BUILD_VERSION = 'v6.1'; var APP_VERSION = 'v6.1';
+<meta name="app-version" content="v6.2">
+<script>var CURRENT_BUILD_VERSION = 'v6.2'; var APP_VERSION = 'v6.2';
   window.CURRENT_BUILD_VERSION = CURRENT_BUILD_VERSION; window.APP_VERSION = APP_VERSION;</script>
 <style>
 :root {
@@ -3303,7 +3303,7 @@ body.hr2-end .hr2-more { opacity: 0.35; }
     <div class="brand-box">
       <div class="game-title">
         <span id="game-title-text">⚔️ 전쟁의 시대: 세계대전</span>
-        <span class="version-badge">v6.1</span>
+        <span class="version-badge">v6.2</span>
       </div>
     </div>
     <div class="util-group">
@@ -3708,7 +3708,7 @@ body.hr2-end .hr2-more { opacity: 0.35; }
     <div class="modal-header-fixed">
       <h2 style="font-size:20px; font-weight:900; color:var(--accent-gold);">⚔️ 통치할 국가를 선택하십시오</h2>
       <p style="font-size:12px; color:var(--text-secondary); margin-top:2px;">1936년 1월 1일, 역사를 새로 쓸 강대국을 지휘하세요.</p>
-      <p style="font-size:11px; color:#fbbf24; font-weight:900; margin-top:5px; letter-spacing:0.3px;">v6.1 — 🌐 카톡 탈출 버튼 수리 · 📱 모바일 자원 줄 잘림 정리 · 🖥️ PC 화면 최적화(휠 확대·단축키) · 🛠️ 지도 라벨 번짐 수리</p>
+      <p style="font-size:11px; color:#fbbf24; font-weight:900; margin-top:5px; letter-spacing:0.3px;">v6.2 — ⚔️ 적국 부대 대폭 증강(주둔 2배·월 증원 2~3배·전선 자동 보충) · 🚀 먼 곳 파병 제한 해제(정치력·거리 페널티 폐지)</p>
       <div class="cmd-name-row">
         <span class="cmd-emoji">🎖️</span>
         <input class="cmd-input" id="commanderNameInput" type="text" maxlength="12" autocomplete="off"
@@ -4082,12 +4082,12 @@ body.hr2-end .hr2-more { opacity: 0.35; }
 <!-- MODAL: v5.7 🔔 신규 버전 감지 & 자동 저장 새로고침 -->
 <div id="updateNoticeModal" class="modal-backdrop update-backdrop" style="display:none;">
   <div class="modal-card-box update-card">
-    <div class="upd-badge" id="upd-badge">[ 🚀 신규 패치 v6.1 배포 완료! ]</div>
+    <div class="upd-badge" id="upd-badge">[ 🚀 신규 패치 v6.2 배포 완료! ]</div>
     <div class="upd-icon">🛰️</div>
     <div class="upd-title">사령부 전산실 업데이트 도착</div>
     <div class="upd-body" id="upd-body">사령관님! 사령부 전산실에 새로운 업데이트가 도착했습니다.
 현재 진행 상황을 안전하게 저장하고 새로고침하여 최신 기능을 적용하십시오.</div>
-    <div class="upd-ver"><span>현재 <b id="upd-cur">v6.1</b></span><span>→</span><span>최신 <b id="upd-new">v6.1</b></span></div>
+    <div class="upd-ver"><span>현재 <b id="upd-cur">v6.2</b></span><span>→</span><span>최신 <b id="upd-new">v6.2</b></span></div>
     <div class="upd-actions">
       <button class="upd-btn primary" id="upd-apply" onclick="updateSaveAndReload()">[ 💾 자동 저장 후 지금 새로고침 ]</button>
       <button class="upd-btn" id="upd-later" onclick="updateLater()">[ 나중에 하기 ]</button>
@@ -4670,42 +4670,45 @@ let gameState = {
   missileProgress: 0
 };
 
-// v5: 대전쟁다운 방어선 — 열강 수도 8~14개 사단, 일반 거점도 4~6개 사단
+// v6.2: 적국 부대 대폭 증강 — v6.1까지의 2배로 모든 거점 주둔 사단을 올렸다.
+//       (열강 수도 24~28개 사단, 주요 거점 10~20개, 일반 거점 8개)
+//       아군 시작 거점도 같이 올라가 첫 전투의 상대 비율은 v6.1과 같고,
+//       이후 전선의 저항과 증원 압력만 훨씬 두꺼워진다.
 const START_DIVISIONS = {
-  ussr_west: 14,      // 모스크바 (소련 본토)
-  germany: 12,        // 베를린
-  us_east: 12,        // 워싱턴 D.C.
-  uk: 10,             // 런던
-  japan: 10,          // 도쿄
-  france: 9,          // 파리
-  ussr_south: 9,      // 스탈린그라드 & 코카서스
-  us_west: 8,         // 로스앤젤레스
-  ussr_east: 7,       // 우랄 & 시베리아
-  italy: 7,           // 로마
-  poland: 6,          // 바르샤바
-  china_south: 6,     // 난징 (충칭)
-  india: 6,           // 뉴델리
-  china_north: 5,     // 베이징
-  manchuria: 5,       // 신경
-  czech: 5,           // 프라하
-  balkans: 5,         // 베오그라드
-  low_countries: 4,   // 브뤼셀
-  austria: 4,         // 빈
-  spain: 4,           // 마드리드
-  scandinavia: 4,     // 스톡홀름
-  korea: 4,           // 경성
-  southeast_asia: 4,  // 싱가포르
-  australia: 4,       // 캔버라
-  canada: 4,          // 오타와
-  latin_america: 4,   // 리우데자네이루
-  middle_east: 4,     // 바그다드
-  north_africa: 4,    // 카이로
-  sub_sahara: 4,      // 케이프타운
-  finland: 4,         // 헬싱키
-  turkey: 5,          // 앙카라
-  switzerland: 4,     // 베른
-  mexico: 4,          // 멕시코시티
-  romania: 5          // 부쿠레슈티
+  ussr_west: 28,      // 모스크바 (소련 본토)
+  germany: 24,        // 베를린
+  us_east: 24,        // 워싱턴 D.C.
+  uk: 20,             // 런던
+  japan: 20,          // 도쿄
+  france: 18,         // 파리
+  ussr_south: 18,     // 스탈린그라드 & 코카서스
+  us_west: 16,        // 로스앤젤레스
+  ussr_east: 14,      // 우랄 & 시베리아
+  italy: 14,          // 로마
+  poland: 12,         // 바르샤바
+  china_south: 12,    // 난징 (충칭)
+  india: 12,          // 뉴델리
+  china_north: 10,    // 베이징
+  manchuria: 10,      // 신경
+  czech: 10,          // 프라하
+  balkans: 10,        // 베오그라드
+  low_countries: 8,   // 브뤼셀
+  austria: 8,         // 빈
+  spain: 8,           // 마드리드
+  scandinavia: 8,     // 스톡홀름
+  korea: 8,           // 경성
+  southeast_asia: 8,  // 싱가포르
+  australia: 8,       // 캔버라
+  canada: 8,          // 오타와
+  latin_america: 8,   // 리우데자네이루
+  middle_east: 8,     // 바그다드
+  north_africa: 8,    // 카이로
+  sub_sahara: 8,      // 케이프타운
+  finland: 8,         // 헬싱키
+  turkey: 10,         // 앙카라
+  switzerland: 8,     // 베른
+  mexico: 8,          // 멕시코시티
+  romania: 10         // 부쿠레슈티
 };
 
 // INITIALIZE REGIONS
@@ -4754,6 +4757,7 @@ function initGameState() {
   gameState.speech = null;
   gameState.ppOps = null;
   gameState.pendingArrest = null;
+  gameState.enemyGarrisonV62 = true;   // v6.2: 새 게임은 시작부터 2배 주둔 → 1회성 보정 대상 아님
   gameState.missiles = 0;
   gameState.missileFactories = 0;
   gameState.tech = null;
@@ -4857,7 +4861,7 @@ function confirmCountrySelection() {
   // Korea starting liberation base
   if (gameState.playerTag === "KOR") {
     gameState.regions["korea"].currentOwner = "KOR";
-    gameState.regions["korea"].divisions = 4;
+    gameState.regions["korea"].divisions = START_DIVISIONS["korea"] || 8;   // v6.2: 2배 주둔(4→8) 반영
     gameState.regions["korea"].civ = 6;
     gameState.regions["korea"].mil = 4;
     gameState.countries["KOR"].pp = 150;
@@ -6206,8 +6210,12 @@ function expeditionDays(dist) {
   try { _mob = milTechMods().mobility || 0; } catch (e) {}
   return Math.max(1, 1 + Math.floor(dist / 180 * (1 - Math.min(0.6, _mob))));
 }
-function expeditionPP(dist) { return 5 + Math.floor(dist / 70); }
-function expeditionFactor(dist) { return Math.max(0.62, 0.9 - dist / 9000); }
+// v6.2: 원거리 파병 제한 해제
+//   · 정치력 비용(5 + 거리/70) 폐지 → 0 PP. 정치력이 없어 발진이 막히지 않는다.
+//   · 거리 전력 페널티(0.62~0.9배) 폐지 → 1.0배. 지구 반대편이라도 전투력 손실 없음.
+//   · 멀리 보낼수록 늘어나는 것은 오직 이동 일수(expeditionDays)뿐이다.
+function expeditionPP(dist) { return 0; }
+function expeditionFactor(dist) { return 1; }
 
 function qtyFor(mode, max) {
   if (max <= 0) return 0;
@@ -6506,7 +6514,7 @@ function refreshAssaultPreview() {
     html += '📍 <b>국경 접경</b> · 즉시 공세 · 추가 비용 없음<br>';
   } else {
     html += '🚀 <b>원정 (상륙·공수)</b> · 거리 <b>' + mapUnitsToKm(dist).toLocaleString() + 'km</b><br>';
-    html += '준비 <b>' + days + '일</b> · 정치력 <b>' + pp + ' PP</b> · 원정 페널티 <b>-' + Math.round((1 - expeditionFactor(dist)) * 100) + '%</b><br>';
+    html += '도착 <b>' + days + '일</b> · <b style="color:#4ade80;">추가 비용 0 PP · 거리 페널티 없음</b><br>';
   }
   const wc = est.winChance;
   const col = wc >= 60 ? '#4ade80' : (wc >= 40 ? '#fbbf24' : '#f87171');
@@ -7030,7 +7038,7 @@ function runCombatSequence(job) {
   if (est.breakthrough) bonusParts.push('전군 돌파력 +' + Math.round(est.breakthrough * 100) + '%');
   if (est.intel) bonusParts.push('첩보 +15%');
   if (est.sabotage) bonusParts.push('사보타주 -15%');
-  if (!job.adjacent) bonusParts.push('원정 페널티 -' + Math.round((1 - expeditionFactor(job.dist)) * 100) + '%');
+  if (!job.adjacent) bonusParts.push('원정 ' + mapUnitsToKm(job.dist).toLocaleString() + 'km · 거리 페널티 없음');
   const bonusEl = document.getElementById('combat-bonus-text');
   if (bonusEl) bonusEl.textContent = bonusParts.join(' · ');
 
@@ -9814,27 +9822,108 @@ function launchSatelliteMany(n) {
 
 
 // ---- WORLD AI: rivals rebuild their armies over time ----
-// v5: AI 방어선 보강 — 매달 여러 거점을 고르게 증원하고 요새를 쌓는다
-const AI_DIV_CAP_PER_REGION = 40;
+// v6.2: 적국 부대 대폭 증강 — 월 증원 2~4 → 4~10 + 정복 규모 가산, 거점 상한 40 → 90,
+//       전선(플레이어와 국경을 맞댄) 최약 거점 집중 보강 + 10일마다 국경 병력 보충.
+const AI_DIV_CAP_PER_REGION = 90;
+const AI_FRONTLINE_TICK_DAYS = 15;
 
+function aiOwnedRegions(tag) {
+  return Object.keys(gameState.regions).filter(function (id) {
+    return gameState.regions[id].currentOwner === tag;
+  });
+}
+
+// 이 거점이 플레이어 영토와 국경을 맞대고 있는가
+function aiIsFrontlineRegion(id) {
+  const r = gameState.regions[id];
+  if (!r) return false;
+  const adj = r.adj || [];
+  for (let i = 0; i < adj.length; i++) {
+    const nb = gameState.regions[adj[i]];
+    if (nb && nb.currentOwner === gameState.playerTag) return true;
+  }
+  const owned = ownedRegionList();
+  for (let i = 0; i < owned.length; i++) {
+    const o = gameState.regions[owned[i]];
+    if (o && (o.adj || []).indexOf(id) >= 0) return true;
+  }
+  return false;
+}
+
+// 상한(AI_DIV_CAP_PER_REGION)까지만 채운다
+function aiReinforceRegions(list, n) {
+  let added = 0;
+  if (!list || !list.length || n <= 0) return added;
+  for (let i = 0; i < n; i++) {
+    const r = gameState.regions[list[i % list.length]];
+    if (!r || r.divisions >= AI_DIV_CAP_PER_REGION) continue;
+    r.divisions += 1;
+    added += 1;
+  }
+  return added;
+}
+
+// v6.2: 기존(v6.1 이하) 판도 1회성 보정 — 저장본의 적국 주둔 사단을 ×1.5(최소 +2, 상한 90)로 끌어올린다.
+//       이미 보정된 저장본(enemyGarrisonV62)에는 다시 적용하지 않는다.
+const ENEMY_GARRISON_V62_MULT = 1.5;
+function migrateEnemyGarrisonV62(saved) {
+  if (!gameState || !gameState.regions) return 0;
+  if (saved && saved.enemyGarrisonV62) { gameState.enemyGarrisonV62 = true; return 0; }
+  let grown = 0;
+  Object.keys(gameState.regions).forEach(function (id) {
+    const r = gameState.regions[id];
+    if (!r || r.currentOwner === gameState.playerTag) return;
+    const before = Math.max(0, Math.round(r.divisions || 0));
+    const after = Math.min(AI_DIV_CAP_PER_REGION, Math.max(before + 2, Math.round(before * ENEMY_GARRISON_V62_MULT)));
+    if (after > before) {
+      r.divisions = after;
+      grown += after - before;
+    }
+  });
+  gameState.enemyGarrisonV62 = true;
+  if (grown > 0) {
+    try {
+      showToast('🚨 [v6.2 적국 총동원령] 전선의 적 사단이 ' + grown + '개 증강되었습니다!', { icon: '⚔️' });
+    } catch (e) {}
+    try {
+      publishNewsQuiet('적국 총동원령 — 전 세계 재무장 개시',
+        '각국이 총동원령을 선포하며 국경에 병력을 집결시켰습니다. 전선의 적 사단이 총 ' + grown + '개 늘어났습니다.');
+    } catch (e) {}
+  }
+  return grown;
+}
+
+// v6.2: 30일마다 — 국가별 대규모 증원 + 전선 최약 거점 집중 보강
 function aiGrowth() {
+  let added = 0;
+  const empireBonus = Math.min(6, Math.floor((gameState.conqueredCount || 0) / 4));
   Object.keys(gameState.countries).forEach(function (tag) {
     if (tag === gameState.playerTag) return;
     if (cyberFactoryDown(tag)) return;      // v5.5: 전산망 셧다운 → 군수·민간 생산 마비
-    const mine = Object.keys(gameState.regions).filter(function (id) {
-      return gameState.regions[id].currentOwner === tag;
-    });
+    const mine = aiOwnedRegions(tag);
     if (!mine.length) return;
     mine.sort(function (a, b) { return gameState.regions[b].vp - gameState.regions[a].vp; });
 
-    // 보유 거점이 많을수록 매달 2~4개 사단을 순환 배치
-    const gain = 2 + Math.min(2, Math.floor(mine.length / 3));
+    // 보유 거점이 많을수록, 플레이어가 커질수록 총동원 규모가 커진다 (4~8 + 가산)
+    const gain = 3 + Math.min(5, Math.ceil(mine.length / 2)) + empireBonus;
     for (let i = 0; i < gain; i++) {
       const target = gameState.regions[mine[(gameState.dayIndex + i) % mine.length]];
-      if (target && target.divisions < AI_DIV_CAP_PER_REGION) target.divisions += 1;
+      if (target && target.divisions < AI_DIV_CAP_PER_REGION) {
+        target.divisions += 1;
+        added += 1;
+      }
     }
 
-    // 요새: 핵심 거점 → 2순위 거점 순으로 (최대 Lv.4)
+    // 전선 보강: 국경을 맞댄 거점 중 가장 얇은 두 곳에 +1씩
+    const front = mine.filter(aiIsFrontlineRegion)
+      .sort(function (a, b) { return gameState.regions[a].divisions - gameState.regions[b].divisions; });
+    if (front.length) {
+      added += aiReinforceRegions(front.slice(0, 1), 1);
+      if (front.length > 1) added += aiReinforceRegions(front.slice(1, 2), 1);
+    }
+
+    // 요새: 핵심 거점 → 2순위 거점 순으로 (최대 Lv.4) — v6.1과 동일한 속도
+    // (v6.2는 병력 증강이 주된 난이도 상승 수단이라 요새 축조 속도는 그대로 둔다)
     if (Math.random() < 0.45) {
       const home = gameState.regions[mine[0]];
       if (home && home.fortLevel < 4) home.fortLevel += 1;
@@ -9844,6 +9933,23 @@ function aiGrowth() {
       if (second && second.fortLevel < 4) second.fortLevel += 1;
     }
   });
+  return added;
+}
+
+// v6.2: 15일마다 국경 병력 보충 — 플레이어와 맞댄 가장 얇은 거점이 계속 두꺼워진다
+function aiFrontlineTick() {
+  let added = 0;
+  Object.keys(gameState.countries).forEach(function (tag) {
+    if (tag === gameState.playerTag) return;
+    if (typeof cyberFactoryDown === 'function' && cyberFactoryDown(tag)) return;
+    const mine = aiOwnedRegions(tag);
+    if (!mine.length) return;
+    const front = mine.filter(aiIsFrontlineRegion)
+      .sort(function (a, b) { return gameState.regions[a].divisions - gameState.regions[b].divisions; });
+    if (!front.length) return;
+    added += aiReinforceRegions(front.slice(0, 1), 1);
+  });
+  return added;
 }
 
 // News that lands in the archive without interrupting play with a popup.
@@ -10224,6 +10330,11 @@ function gameTick() {
 
   // expeditions and redeployments in transit
   tickOperations();
+
+  // v6.2: 15일마다 적국 국경 병력 보충 (전선이 계속 두꺼워진다)
+  if (typeof AI_FRONTLINE_TICK_DAYS !== 'undefined' && gameState.dayIndex % AI_FRONTLINE_TICK_DAYS === 0) {
+    try { aiFrontlineTick(); } catch (e) {}
+  }
 
   if (gameState.dayIndex % 30 === 0) {
     gameState.raids = (gameState.raids || []).filter(function (r) { return r.until > gameState.dayIndex; });
@@ -11296,6 +11407,8 @@ function buildSavePayload() {
   return {
     schema: 5,
     gameVersion: 'v5',
+    buildVersion: (typeof APP_VERSION !== 'undefined') ? APP_VERSION : 'v6.2',
+    enemyGarrisonV62: !!gameState.enemyGarrisonV62,
     savedAtMs: Date.now(),
     savedAtLabel: new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }),
     date: { y: d.getFullYear(), m: d.getMonth(), d: d.getDate() },
@@ -11428,6 +11541,8 @@ function applySave(saved) {
     gameState.focusProgress = saved.focusProgress || 0;
     gameState.activeFocus = findFocusById(saved.activeFocusId);
     gameState.newsArchive = saved.newsArchive || [];
+    // v6.2: v6.1 이전 판도는 적국 주둔 사단이 적어 너무 쉽다 → 1회성 '적국 총동원령' 보정
+    try { migrateEnemyGarrisonV62(saved); } catch (e) {}
     gameState.casualtyStats = saved.casualtyStats || { friendly: 0, enemy: 0 };
     gameState.conqueredCount = saved.conqueredCount || 0;
     gameState.ops = saved.ops || [];
